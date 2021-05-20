@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="ig.news" src=".github/dtmoney.svg" width="100%">
+  <img alt="ig.news" src=".github/ignews.png" width="100%">
 </p>
 
 ## 🧪 Tecnologias
