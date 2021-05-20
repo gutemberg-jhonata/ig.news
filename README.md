@@ -21,7 +21,7 @@ yarn dev
 
 ## 💻 Projeto
 
-O ignews é uma aplicação de noticias da tecnologia, desenvolvida durante o bootcamp Ignite, na trilha de ReactJS.
+O ignews é uma aplicação de notícias da tecnologia, desenvolvida durante o bootcamp Ignite, na trilha de ReactJS.
 
 ## :memo: Licença
 
