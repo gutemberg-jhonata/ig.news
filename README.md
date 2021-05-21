@@ -26,9 +26,14 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 ## 🚀 Uso
 
+Clone o projeto na sua máquina:
 ```bash 
 git clone https://github.com/gutemberg-jhonata/ig.news.git
 cd ig.news
+```
+
+Crie o arquivo .env.local na pasta do projeto, e execute o comando:
+```bash
 yarn dev
 ```
 
