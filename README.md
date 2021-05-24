@@ -23,6 +23,10 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - ReactJS
 - NextJS
 - SASS
+- NextAuth
+- Stripe
+- FaunaDB
+- Prismic CMS
 
 ## 🚀 Uso
 
