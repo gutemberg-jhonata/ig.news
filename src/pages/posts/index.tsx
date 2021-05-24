@@ -1,10 +1,24 @@
-import { GetStaticProps } from 'next';
-import Head from 'next/head';
-import Prismic from '@prismicio/client';
-import { getPrismicClient } from '../../services/prismic';
-import styles from './styles.module.scss';
+import { GetStaticProps } from "next";
+import Head from "next/head";
 
-export default function Posts() {
+import Prismic from "@prismicio/client";
+import { getPrismicClient } from "../../services/prismic";
+import { RichText } from "prismic-dom";
+
+import styles from "./styles.module.scss";
+
+type Post = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  updatedAt: string;
+};
+
+type PostsProps = {
+  posts: Post[];
+};
+
+export default function Posts({ posts }: PostsProps) {
   return (
     <>
       <Head>
@@ -13,21 +27,13 @@ export default function Posts() {
 
       <main className={styles.container}>
         <div className={styles.posts}>
-          <a>
-            <time>12 de março de 2021</time>
-            <strong>Create a Monorepo with Lerna & Yarn Workspaces</strong>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </a>
-          <a>
-            <time>12 de março de 2021</time>
-            <strong>Create a Monorepo with Lerna & Yarn Workspaces</strong>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </a>
-          <a>
-            <time>12 de março de 2021</time>
-            <strong>Create a Monorepo with Lerna & Yarn Workspaces</strong>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </a>
+          {posts.map((post) => (
+            <a>
+              <time>{post.updatedAt}</time>
+              <strong>{post.title}</strong>
+              <p>{post.excerpt}</p>
+            </a>
+          ))}
         </div>
       </main>
     </>
@@ -37,16 +43,35 @@ export default function Posts() {
 export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient();
 
-  const response = await prismic.query([
-    Prismic.Predicates.at("document.type", "repeatable_type")
-  ], {
-    fetch: ['post.title', 'post.content'],
-    pageSize: 100
-  })
+  const response = await prismic.query(
+    [Prismic.Predicates.at("document.type", "repeatable_type")],
+    {
+      fetch: ["post.title", "post.content"],
+      pageSize: 100,
+    }
+  );
+
+  const posts = response.results.map((post) => {
+    return {
+      slug: post.uid,
+      title: RichText.asText(post.data.title),
+      excerpt:
+        post.data.content.find((content) => content.type === "paragraph")
+          ?.text ?? "",
+      updatedAt: new Date(post.last_publication_date).toLocaleDateString(
+        "pt-BR",
+        {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        }
+      ),
+    };
+  });
 
   return {
     props: {
-
-    }
-  }
-}
+      posts,
+    },
+  };
+};
