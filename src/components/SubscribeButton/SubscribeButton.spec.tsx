@@ -8,7 +8,7 @@ jest.mock('next/dist/client/router')
 
 describe('SubscribeButton component', () => {
   it('renders correctly', () => {
-    const useSessionMocked = useSession as jest.Mock
+    const useSessionMocked = jest.mocked(useSession)
     useSessionMocked.mockReturnValueOnce([null, false])
 
     render(
@@ -19,9 +19,9 @@ describe('SubscribeButton component', () => {
   })
 
   it('redirects user to sign in when not authenticated', () => {
-    const useSessionMocked = useSession as jest.Mock
+    const useSessionMocked = jest.mocked(useSession)
     useSessionMocked.mockReturnValueOnce([null, false])
-    const signInMocked = signIn as jest.Mock
+    const signInMocked = jest.mocked(signIn)
 
     render(
       <SubscribeButton />
@@ -33,16 +33,16 @@ describe('SubscribeButton component', () => {
   })
 
   it('redirects to posts when user already has a subscription', () => {
-    const useSessionMocked = useSession as jest.Mock
+    const useSessionMocked = jest.mocked(useSession)
     useSessionMocked.mockReturnValueOnce([
       { activeSubscription: 'fake-active-subscription' },
       false
     ])
-    const useRouterMocked = useRouter as jest.Mock
+    const useRouterMocked = jest.mocked(useRouter)
     const pushMock = jest.fn()
     useRouterMocked.mockReturnValueOnce({
-      push: pushMock
-    })
+      'push': pushMock
+    } as any)
 
     render(
       <SubscribeButton />
